@@ -31,7 +31,7 @@ type Config struct {
 
 func main() {
 	config := &Config{
-		NumConnections: 5,
+		NumConnections: 10,
 		DestinationMap: make(map[string]string),
 		Branch:         "main", // default branch
 		AutoConfirm:    false,
@@ -88,7 +88,7 @@ Pattern examples:
   - "*.safetensors"                              # Download all safetensors files
   - "model.safetensors:models/my-model.safetensors"  # Download with new name
   - "model.pt:models/checkpoints/"               # Keep original name in directory`,
-		SilenceUsage: true,
+		SilenceUsage: false,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if config.Repo == "" {
 				return fmt.Errorf("repository must be specified with -r flag")
@@ -117,11 +117,12 @@ Pattern examples:
 	rootCmd.PersistentFlags().StringVarP(&config.Token, "token", "t", os.Getenv("HF_TOKEN"), "HuggingFace API token")
 	rootCmd.PersistentFlags().StringVarP(&config.Repo, "repo", "r", "", "Repository name (required, format: owner/name)")
 	rootCmd.PersistentFlags().StringVarP(&config.Branch, "branch", "b", "main", "Repository branch or commit hash")
-	rootCmd.PersistentFlags().IntVarP(&config.NumConnections, "connections", "c", 5, "Number of concurrent download connections")
+	rootCmd.PersistentFlags().IntVarP(&config.NumConnections, "connections", "c", 10, "Number of concurrent download connections")
 	rootCmd.PersistentFlags().BoolVarP(&config.SkipVerify, "skip-verify", "s", false, "Skip SHA verification")
 	rootCmd.PersistentFlags().BoolVarP(&config.AutoConfirm, "yes", "y", false, "Auto confirm all prompts")
 
 	// Download command specific flags
+	// TODO: make this appear in --help
 	downloadCmd.Flags().StringArrayVarP(&filterMappings, "filter", "f", []string{}, "File filter with optional destination (pattern[:destination])")
 
 	// Add commands to root command

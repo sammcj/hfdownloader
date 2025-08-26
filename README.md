@@ -19,17 +19,19 @@ Forked from https://github.com/lxe/hfdownloader who forked from https://github.c
 
 ```bash
 # Clone the repository
-git clone https://github.com/lxe/hfdownloader
+git clone --depth=2 https://github.com/sammcj/hfdownloader
 cd hfdownloader
 
 # Build for your platform
-make        # Build for all platforms
-make darwin # macOS only (AMD64, ARM64)
-make linux  # Linux only (AMD64)
-make arm    # ARM only (ARMv7, ARM64)
+make              # Build for macos, linux-am64
+make macos        # macOS only (ARM64)
+make linux        # Linux only (AMD64)
+make linux-arm    # Linux ARM only (ARMv7, ARM64)
 
-# Install locally (Unix-like systems)
-sudo make install
+# Install locally
+make install-macos     # macOS
+make install-linux     # Linux AMD64
+make install-linux-arm # Linux ARM
 ```
 
 For more build options, run `make help`.
@@ -37,7 +39,7 @@ For more build options, run `make help`.
 ### Using Go Install
 
 ```bash
-go install github.com/lxe/hfdownloader@latest
+go install github.com/sammcj/hfdownloader@latest
 ```
 
 ## Usage
