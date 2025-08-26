@@ -18,7 +18,7 @@ Forked from https://github.com/lxe/hfdownloader who forked from https://github.c
 ### Using Go Install (Recommended)
 
 ```bash
-go install github.com/sammcj/hfdownloader@latest
+go install github.com/sammcj/hfdownloader@HEAD
 ```
 
 ### From Source
