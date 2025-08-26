@@ -15,6 +15,12 @@ Forked from https://github.com/lxe/hfdownloader who forked from https://github.c
 
 ## Installation
 
+### Using Go Install (Recommended)
+
+```bash
+go install github.com/sammcj/hfdownloader@latest
+```
+
 ### From Source
 
 ```bash
@@ -36,12 +42,6 @@ make install-linux-arm # Linux ARM
 
 For more build options, run `make help`.
 
-### Using Go Install
-
-```bash
-go install github.com/sammcj/hfdownloader@latest
-```
-
 ## Usage
 
 ### List Repository Contents
@@ -56,7 +56,21 @@ hfdownloader -r runwayml/stable-diffusion-v1-5 list -b main
 
 ### Practical Examples
 
-Here are some real-world examples using a FP8 model repository:
+```shell
+hfdownloader -c 20 -r unsloth/DeepSeek-V3.1-GGUF download -f '*UD-Q2_K_XL*' -t $HUGGINGFACE_API_TOKEN
+Files to download:
+  UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00001-of-00006.gguf -> UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00001-of-00006.gguf (46.5 GiB)
+  UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00002-of-00006.gguf -> UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00002-of-00006.gguf (45.2 GiB)
+  UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00003-of-00006.gguf -> UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00003-of-00006.gguf (46.2 GiB)
+  UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00004-of-00006.gguf -> UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00004-of-00006.gguf (45.8 GiB)
+  UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00005-of-00006.gguf -> UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00005-of-00006.gguf (45.5 GiB)
+  UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00006-of-00006.gguf -> UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00006-of-00006.gguf (8.7 GiB)
+
+Proceed with download? [y/N] y
+UD-Q2_K_XL/DeepSeek-V3.1-UD-Q2_K_XL-00001-of-00006.gguf [             ] 1.3% | 622.8 MiB / 46.5 GiB | 103.7 MiB/s | ETA: 453ss
+```
+
+Examples:
 
 ```bash
 # List all files in the repository
@@ -73,14 +87,6 @@ hfdownloader -r Kijai/flux-fp8 download -f "*vae*.safetensors:models/vae" -y -c 
 
 # Use a regex instead of glob and skip SHA verification for faster downloads
 hfdownloader -r Kijai/flux-fp8 download -f "/e4m3fn/:models/checkpoints" -y -c 16 --skip-sha
-```
-
-### Authentication
-
-For private repositories, you can provide your HuggingFace token:
-
-```bash
-hfdownloader -r private-org/model download -t "your_token_here" -f "*.safetensors"
 ```
 
 ## Pattern Matching

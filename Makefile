@@ -15,7 +15,7 @@ GO_BUILD=CGO_ENABLED=0 go build $(LDFLAGS)
 # Default target
 .PHONY: all
 all: clean macos linux
-#windows linux-arm64
+#windows
 
 # Create build directories
 $(BUILD_DIR):
@@ -60,7 +60,7 @@ install-linux: linux
 	@echo "Installed to /usr/local/bin/$(BINARY)"
 
 .PHONY: install-linux-arm
-install-linux: linux
+install-linux-arm: linux
 	cp "$(BUILD_DIR)/linux/$(BINARY)_arm64" /usr/local/bin/$(BINARY)
 	@echo "Installed to /usr/local/bin/$(BINARY)"
 
