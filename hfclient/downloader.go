@@ -244,9 +244,9 @@ func (pm *progressMonitor) start() {
 				}
 				totalRead += p.bytesRead
 
-				// Update progress every 100ms
+				// Update progress every 1 second
 				now := time.Now()
-				if now.Sub(lastUpdate) >= 100*time.Millisecond {
+				if now.Sub(lastUpdate) >= 1*time.Second {
 					percent := float64(totalRead) * 100 / float64(pm.file.Size)
 					speed := float64(totalRead-lastBytes) / now.Sub(lastUpdate).Seconds()
 
@@ -258,23 +258,29 @@ func (pm *progressMonitor) start() {
 					// Calculate ETA
 					if speed > 0 {
 						remaining := float64(pm.file.Size-totalRead) / speed
-						fmt.Printf("\r%s [%s] %.1f%% | %s / %s | %s | ETA: %.0fs",
+						// Format ETA properly to avoid multiple 's' characters
+						etaStr := fmt.Sprintf("%.0fs", remaining)
+						progressLine := fmt.Sprintf("%s [%s] %.1f%% | %s / %s | %s | ETA: %s",
 							pm.file.Path,
 							bar,
 							percent,
 							formatSize(totalRead),
 							formatSize(pm.file.Size),
 							formatSpeed(speed),
-							remaining,
+							etaStr,
 						)
+						// Clear line and print with padding to overwrite any remaining characters
+						fmt.Printf("\r%-120s", progressLine)
 					} else {
-						fmt.Printf("\r%s [%s] %.1f%% | %s / %s",
+						progressLine := fmt.Sprintf("%s [%s] %.1f%% | %s / %s",
 							pm.file.Path,
 							bar,
 							percent,
 							formatSize(totalRead),
 							formatSize(pm.file.Size),
 						)
+						// Clear line and print with padding to overwrite any remaining characters
+						fmt.Printf("\r%-120s", progressLine)
 					}
 
 					lastUpdate = now

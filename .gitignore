@@ -9,3 +9,5 @@ bin/
 **/*.gguf
 **/*.ggml
 **/*.cache
+.serena/cache
+.serena/memories

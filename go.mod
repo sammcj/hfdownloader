@@ -1,4 +1,4 @@
-module github.com/lxe/hfdownloader
+module github.com/sammcj/hfdownloader
 
 go 1.25
 

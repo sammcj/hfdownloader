@@ -12,7 +12,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/lxe/hfdownloader/hfclient"
+	"github.com/sammcj/hfdownloader/hfclient"
 	"github.com/spf13/cobra"
 )
 
