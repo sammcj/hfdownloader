@@ -14,7 +14,8 @@ GO_BUILD=CGO_ENABLED=0 go build $(LDFLAGS)
 
 # Default target
 .PHONY: all
-all: clean darwin linux windows arm
+all: clean darwin linux
+#windows arm
 
 # Create build directories
 $(BUILD_DIR):
@@ -81,4 +82,4 @@ help:
 	@echo "  install  - Install locally (Unix-like systems)"
 	@echo "  test     - Run tests"
 	@echo "  version  - Show current version"
-	@echo "  help     - Show this help" 
+	@echo "  help     - Show this help"

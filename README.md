@@ -2,6 +2,8 @@
 
 A fast and efficient tool for downloading files from HuggingFace repositories. Features parallel downloads, SHA verification, and flexible file filtering.
 
+Forked from https://github.com/lxe/hfdownloader who forked from https://github.com/bodaay/HuggingFaceModelDownloader
+
 ## Features
 
 - Fast parallel downloads with configurable connections
@@ -59,7 +61,7 @@ Here are some real-world examples using a FP8 model repository:
 hfdownloader -r Kijai/flux-fp8 list
 
 # Download all the vae safetensor files into the current directory
-hfdownloader -r Kijai/flux-fp8 download -f "*vae*.safetensors" 
+hfdownloader -r Kijai/flux-fp8 download -f "*vae*.safetensors"
 
 # Download VAE model to models/vae directory (auto-confirm)
 hfdownloader -r Kijai/flux-fp8 download -f "*vae*.safetensors:models/vae" -y
@@ -101,10 +103,10 @@ You can specify custom destinations for downloaded files using the format `patte
    ```bash
    # Downloads flux-vae.safetensors to models/vae/flux-vae.safetensors
    hfdownloader -r org/model download -f "flux-vae.safetensors:models/vae/"
-   
+
    # Downloads all .safetensors files to models/checkpoints/, keeping original names
    hfdownloader -r org/model download -f "*.safetensors:models/checkpoints/"
-   
+
    # Downloads multiple files to different directories
    hfdownloader -r org/model download \
      -f "model.safetensors:models/full/" \
@@ -117,7 +119,7 @@ You can specify custom destinations for downloaded files using the format `patte
    # If models/vae exists, this will show a warning and download to:
    # models/vae/flux-vae.safetensors
    hfdownloader -r org/model download -f "flux-vae.safetensors:models/vae"
-   
+
    # Multiple files to existing directory
    hfdownloader -r org/model download \
      -f "*-fp16.safetensors:models/checkpoints" \
@@ -129,7 +131,7 @@ You can specify custom destinations for downloaded files using the format `patte
    # Downloads to exact path with new filename
    hfdownloader -r org/model download \
      -f "model.safetensors:models/checkpoints/sd15-base.safetensors"
-   
+
    # Multiple files with custom names
    hfdownloader -r org/model download \
      -f "model-v1.safetensors:models/v1-base.safetensors" \
@@ -182,4 +184,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT License - see LICENSE file for details
+Apache 2.0 License - see LICENSE file for details
+
+(Note: Before forking, the original repo stated it was MIT licensed, but the included license was actually Apache 2.0. This repo is now Apache 2.0 licensed.)
