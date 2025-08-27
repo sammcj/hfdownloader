@@ -11,3 +11,5 @@ bin/
 **/*.cache
 .serena/cache
 .serena/memories
+**/dev*review.md
+**/dev*plan.md
