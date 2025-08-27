@@ -71,7 +71,7 @@ Use -r flag to specify repository or -d for direct download.`,
 				fmt.Printf("hfdownloader v%s\n", VERSION)
 				os.Exit(0)
 			}
-			
+
 			// Handle direct download flag
 			if directDownload != "" {
 				config.Repo = directDownload
@@ -171,7 +171,7 @@ Pattern examples:
 	rootCmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "Show version information")
 	rootCmd.PersistentFlags().StringArrayVarP(&filterMappings, "filter", "f", []string{}, "File filter with optional destination (pattern[:destination])")
 
-	// Download command specific flags  
+	// Download command specific flags
 	downloadCmd.Flags().StringArrayVarP(&filterMappings, "filter", "f", []string{}, "File filter with optional destination (pattern[:destination])")
 
 	// Add commands to root command
