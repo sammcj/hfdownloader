@@ -53,6 +53,7 @@ func main() {
 
 	var filterMappings []string
 	var directDownload string
+	var showVersion bool
 
 	rootCmd := &cobra.Command{
 		Use:   "hfdownloader",
@@ -65,6 +66,12 @@ Use -r flag to specify repository or -d for direct download.`,
 		SilenceErrors: false,
 		SilenceUsage:  false,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			// Handle version flag
+			if showVersion {
+				fmt.Printf("hfdownloader v%s\n", VERSION)
+				os.Exit(0)
+			}
+			
 			// Handle direct download flag
 			if directDownload != "" {
 				config.Repo = directDownload
@@ -161,6 +168,7 @@ Pattern examples:
 	rootCmd.PersistentFlags().IntVarP(&config.NumConnections, "connections", "c", 10, "Number of concurrent download connections")
 	rootCmd.PersistentFlags().BoolVarP(&config.SkipVerify, "skip-verify", "s", false, "Skip SHA verification")
 	rootCmd.PersistentFlags().BoolVarP(&config.AutoConfirm, "yes", "y", false, "Auto confirm all prompts")
+	rootCmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "Show version information")
 	rootCmd.PersistentFlags().StringArrayVarP(&filterMappings, "filter", "f", []string{}, "File filter with optional destination (pattern[:destination])")
 
 	// Download command specific flags  

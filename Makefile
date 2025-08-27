@@ -4,10 +4,10 @@ BINARY=hfdownloader
 # Get version from main.go
 VERSION=$(shell grep '^const VERSION' main.go | sed -E 's/.*= *"([^"]+)".*/\1/')
 
-# Version components for bumping
-MAJOR=$(shell echo $(VERSION) | cut -d. -f1)
-MINOR=$(shell echo $(VERSION) | cut -d. -f2)  
-PATCH=$(shell echo $(VERSION) | cut -d. -f3)
+# Version components for bumping (strip whitespace)
+MAJOR=$(shell echo $(VERSION) | cut -d. -f1 | tr -d ' ')
+MINOR=$(shell echo $(VERSION) | cut -d. -f2 | tr -d ' ')
+PATCH=$(shell echo $(VERSION) | cut -d. -f3 | tr -d ' ')
 
 # Build directories
 BUILD_DIR=bin
@@ -104,15 +104,15 @@ endef
 # Semantic version bump targets
 .PHONY: bump-major
 bump-major:
-	$(call bump_version,$(shell echo $$(($(MAJOR)+1)).0.0))
+	$(call bump_version,$(shell expr $(MAJOR) + 1).0.0)
 
 .PHONY: bump-minor  
 bump-minor:
-	$(call bump_version,$(MAJOR).$(shell echo $$(($(MINOR)+1))).0)
+	$(call bump_version,$(MAJOR).$(shell expr $(MINOR) + 1).0)
 
 .PHONY: bump-patch
 bump-patch:
-	$(call bump_version,$(MAJOR).$(MINOR).$(shell echo $$(($(PATCH)+1))))
+	$(call bump_version,$(MAJOR).$(MINOR).$(shell expr $(PATCH) + 1))
 
 # Aliases for convenience
 .PHONY: bump
@@ -209,6 +209,17 @@ help:
 	@echo "  all      - Build for all platforms (default)"
 	@echo "  macos    - Build for macOS (AMD64, ARM64)"
 	@echo "  linux    - Build for Linux (AMD64, ARM64)"
+	@echo ""
+	@echo "Version management:"
+	@echo "  bump           - Bump patch version (alias: patch)"
+	@echo "  bump-major     - Bump major version (alias: major)"
+	@echo "  bump-minor     - Bump minor version (alias: minor)"
+	@echo "  bump-patch     - Bump patch version"
+	@echo "  release        - Bump patch, build all, and create git tag"
+	@echo "  release-major  - Bump major, build all, and create git tag"
+	@echo "  release-minor  - Bump minor, build all, and create git tag"
+	@echo "  release-patch  - Bump patch, build all, and create git tag"
+	@echo "  tag            - Create git tag for current version"
 	@echo ""
 	@echo "Utility targets:"
 	@echo "  clean    - Remove build artifacts"
