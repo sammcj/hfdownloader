@@ -29,6 +29,20 @@ type Config struct {
 	AutoConfirm    bool
 }
 
+func getTokenFromEnv() string {
+	// Check multiple environment variables for HuggingFace tokens
+	if token := os.Getenv("HF_TOKEN"); token != "" {
+		return token
+	}
+	if token := os.Getenv("HUGGINGFACE_API_TOKEN"); token != "" {
+		return token
+	}
+	if token := os.Getenv("HUGGINGFACE_TOKEN"); token != "" {
+		return token
+	}
+	return ""
+}
+
 func main() {
 	config := &Config{
 		NumConnections: 10,
@@ -38,16 +52,42 @@ func main() {
 	}
 
 	var filterMappings []string
+	var directDownload string
 
 	rootCmd := &cobra.Command{
 		Use:   "hfdownloader",
 		Short: fmt.Sprintf("HuggingFace Fast Downloader v%s", VERSION),
 		Long: `A fast and efficient tool for downloading files from HuggingFace repositories.
-Use -r flag to specify repository in the format 'owner/name'.`,
+Use -r flag to specify repository or -d for direct download.`,
 		Example: `  hfdownloader -r black-forest-labs/FLUX.1-dev list
-  hfdownloader -r black-forest-labs/FLUX.1-dev download -f "*.safetensors"`,
+  hfdownloader -r black-forest-labs/FLUX.1-dev download -f "*.safetensors"
+  hfdownloader -d black-forest-labs/FLUX.1-dev -f "*.safetensors"`,
 		SilenceErrors: false,
 		SilenceUsage:  false,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			// Handle direct download flag
+			if directDownload != "" {
+				config.Repo = directDownload
+				// Set default filters if none provided
+				if len(filterMappings) == 0 {
+					filterMappings = []string{"*"}
+				}
+				// Parse filter mappings
+				for _, mapping := range filterMappings {
+					pattern, dest, err := parseFilterMapping(mapping)
+					if err != nil {
+						return err
+					}
+					config.Filters = append(config.Filters, pattern)
+					if dest != "" {
+						config.DestinationMap[pattern] = dest
+					}
+				}
+				// Trigger download
+				return downloadFiles(config)
+			}
+			return cmd.Help()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cmd.Help()
 		},
@@ -114,15 +154,16 @@ Pattern examples:
 	}
 
 	// Global flags
-	rootCmd.PersistentFlags().StringVarP(&config.Token, "token", "t", os.Getenv("HF_TOKEN"), "HuggingFace API token")
-	rootCmd.PersistentFlags().StringVarP(&config.Repo, "repo", "r", "", "Repository name (required, format: owner/name)")
+	rootCmd.PersistentFlags().StringVarP(&config.Token, "token", "t", getTokenFromEnv(), "HuggingFace API token")
+	rootCmd.PersistentFlags().StringVarP(&config.Repo, "repo", "r", "", "Repository name (format: owner/name)")
+	rootCmd.PersistentFlags().StringVarP(&directDownload, "download", "d", "", "Direct download from repository (format: owner/name)")
 	rootCmd.PersistentFlags().StringVarP(&config.Branch, "branch", "b", "main", "Repository branch or commit hash")
 	rootCmd.PersistentFlags().IntVarP(&config.NumConnections, "connections", "c", 10, "Number of concurrent download connections")
 	rootCmd.PersistentFlags().BoolVarP(&config.SkipVerify, "skip-verify", "s", false, "Skip SHA verification")
 	rootCmd.PersistentFlags().BoolVarP(&config.AutoConfirm, "yes", "y", false, "Auto confirm all prompts")
+	rootCmd.PersistentFlags().StringArrayVarP(&filterMappings, "filter", "f", []string{}, "File filter with optional destination (pattern[:destination])")
 
-	// Download command specific flags
-	// TODO: make this appear in --help
+	// Download command specific flags  
 	downloadCmd.Flags().StringArrayVarP(&filterMappings, "filter", "f", []string{}, "File filter with optional destination (pattern[:destination])")
 
 	// Add commands to root command

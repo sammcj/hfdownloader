@@ -258,9 +258,8 @@ func (pm *progressMonitor) start() {
 					// Calculate ETA
 					if speed > 0 {
 						remaining := float64(pm.file.Size-totalRead) / speed
-						// Format ETA properly to avoid multiple 's' characters
 						etaStr := fmt.Sprintf("%.0fs", remaining)
-						progressLine := fmt.Sprintf("%s [%s] %.1f%% | %s / %s | %s | ETA: %s",
+						progressLine := fmt.Sprintf("%s [%s] %.1f%% | %s / %s | %s | File ETA: %s",
 							pm.file.Path,
 							bar,
 							percent,
